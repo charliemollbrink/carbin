@@ -7,7 +7,7 @@ class LastFM{
 	public function __construct($artist){
 		$this->artist = strtolower($artist);
 		$this->result = $this->fetchLastFmTags();
-		$this->tag_list = $this->generateTagList();
+		//$this->tag_list = $this->generateTagList();
 	}
 
 	/* function to fetch tags from last fm api */
@@ -19,15 +19,25 @@ class LastFM{
 	}
 	
 	/* function to generate a comma separated list */
-	private function generateTagList(){
+	public function generateCommaTagList($limit){
 		$tag_list = '';
 		$tags = new SimpleXMLElement($this->result);
-		foreach ($tags->toptags[0]->tag as $tag){
-
-		$tag_list .= (string)$tag->name.", ";
+		for ($i= 0; $i <= $limit; ++$i){
+			$tag = (string)$tags->toptags[0]->tag[$i]->name;
+			$tag_list .= $tag.", ";
 		}
-		echo $tag_list;
-	//return $tags;
+	return $tag_list;
+	}
+	/* function to generate an array with tags an percentage */
+	public function generateArrayTagList($limit){
+		$tags = new SimpleXMLElement($this->result);
+		for ($i= 0; $i <= $limit; ++$i){
+			$name = (string)$tags->toptags[0]->tag[$i]->name;
+			$count = (string)$tags->toptags[0]->tag[$i]->count;
+			$tag_list[$name] = $count;
+			//$tag_list[] = array('name' => $name, 'count' => $count);
+		}
+	return $tag_list;
 	}
 	
 	
