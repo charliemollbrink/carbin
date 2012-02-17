@@ -6,15 +6,19 @@ abstract class Resource{
   protected $fields;
   public $data;
  
-  function __construct($method, $id, $data){
+  function __construct($method, $id, $idLev2, $data, $resourceLev2){
  
     switch($method){
       case 'GET':
-          if($id){
-            $this->get($id);
-          }else{
-            $this->collection();
-          }
+        if($resourceLev2 && $idLev2){
+          $this->getLev2($id, $idLev2);
+        } else if($resourceLev2){
+          $this->get($id);
+        } else if($id){
+          $this->get($id);
+        } else {
+          $this->collection();
+        }
         break;
       case 'POST':
           $this->post($data);
@@ -28,17 +32,33 @@ abstract class Resource{
     }
  
   }
- 
   function get($id){
-    $id = mysql_real_escape_string($id);
     $query = "
       SELECT {$this->fields['get']}
       FROM {$this->entity}
       WHERE id='$id'
-      LIMIT 1
     ";
+
     $result = mysql_query($query);
-    $resource = mysql_fetch_assoc($result);
+    while($row = mysql_fetch_assoc($result)){
+      $resource[] = $row;
+    }
+    $this->data = $resource;
+  }
+  function getLev2($id, $idLev2){
+    $id = mysql_real_escape_string($id);
+    $idLev2 = mysql_real_escape_string($idLev2);
+    $query = "
+      SELECT {$this->fields['get']}
+      FROM {$this->entity}
+      WHERE id='$id'
+      AND {$this->idLev2}=$idLev2
+    ";
+
+    $result = mysql_query($query);
+    while($row = mysql_fetch_assoc($result)){
+      $resource[] = $row;
+    }
     $this->data = $resource;
   }
  
@@ -87,8 +107,7 @@ abstract class Resource{
       $resource[] = $row;
     }
     $this->data = $resource;
-  }
- 
+  } 
 }
  
 ?>
