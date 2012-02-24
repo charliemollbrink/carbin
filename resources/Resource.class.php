@@ -6,19 +6,15 @@ abstract class Resource{
   protected $fields;
   public $data;
  
-  function __construct($method, $id, $idLev2, $data, $resourceLev2){
+  function __construct($method, $id, $data){
  
     switch($method){
       case 'GET':
-        if($resourceLev2 && $idLev2){
-          $this->getLev2($id, $idLev2);
-        } else if($resourceLev2){
-          $this->get($id);
-        } else if($id){
-          $this->get($id);
-        } else {
-          $this->collection();
-        }
+          if($id){
+            $this->get($id);
+          } else {
+            $this->collection();
+          }
         break;
       case 'POST':
           $this->post($data);
@@ -36,23 +32,7 @@ abstract class Resource{
     $query = "
       SELECT {$this->fields['get']}
       FROM {$this->entity}
-      WHERE id='$id'
-    ";
-
-    $result = mysql_query($query);
-    while($row = mysql_fetch_assoc($result)){
-      $resource[] = $row;
-    }
-    $this->data = $resource;
-  }
-  function getLev2($id, $idLev2){
-    $id = mysql_real_escape_string($id);
-    $idLev2 = mysql_real_escape_string($idLev2);
-    $query = "
-      SELECT {$this->fields['get']}
-      FROM {$this->entity}
-      WHERE id='$id'
-      AND {$this->idLev2}=$idLev2
+      WHERE {$this->id}='$id'
     ";
 
     $result = mysql_query($query);
@@ -62,13 +42,32 @@ abstract class Resource{
     $this->data = $resource;
   }
  
-  function post(){
- 
+  function post($data){
+    $fields = explode(',',$this->fields['post']);
+    $post_fields = array();
+    $field_keys = array();
+
+    foreach($fields as $field){
+      if(isset($data[$field])){
+        $value = $data[$field];
+        $post_fields[] = "'$value'";
+        $field_keys[] = $field;
+      }
+    }
+    $fields_sql = implode(',',$post_fields);
+    $keys_sql = implode(',',$field_keys);
+
+    if($fields_sql && $keys_sql){
+      $query = "INSERT INTO {$this->entity} ($keys_sql)
+      VALUES ($fields_sql)";     
+      $result = mysql_query($query);
+      $id = mysql_insert_id();
+      $this->get($id);
+    }
   }
  
   function put($id,$data){
     $id = mysql_real_escape_string($id);
- 
     $fields = explode(',',$this->fields['put']);
  
     $update_fields = array();
@@ -85,7 +84,7 @@ abstract class Resource{
       $query = "
         UPDATE {$this->entity}
         SET $fields_sql
-        WHERE id='$id'
+        WHERE {$this->id}='$id'
       ";
       $result = mysql_query($query);
     }
@@ -93,7 +92,10 @@ abstract class Resource{
   }
  
   function delete($id){
- 
+    $id = mysql_real_escape_string($id); 
+    $query = "DELETE FROM {$this->entity}
+              WHERE {$this->id}='{$id}'";
+    mysql_query($query) or die();
   }
  
   function collection(){
