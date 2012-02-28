@@ -9,24 +9,17 @@ if(isset($_GET['query'], $_GET['type']) && $_GET['query'] !="" && $_GET['type'] 
     $search = new Search($query, $type);
     $recId = $search->getRecId();
 
-
-    $lastfm = new LastFM($query);
-    $lastfm->getTagList();
-
-    // echo '<pre>';
-    // print_r($lastfm);
-    // echo '</pre>';
-
+    function getContentFromUrl($url){
+        $json = file_get_contents($url);
+        return json_decode($json);
+    }
 
     if($recId){
-        $recipeUrl = "http://localhost/carbin/resources/?recipes/$recId";
-        $recipeJson = file_get_contents($recipeUrl);
-        $recipeData = json_decode($recipeJson);
-
-        $ingredientsUrl = "http://localhost/carbin/resources/?recipes/$recId/ingredients";
-        $ingredientsJson = file_get_contents($ingredientsUrl);
-        $ingredientsData = json_decode($ingredientsJson);
+        $recipeData = getContentFromUrl("http://localhost/carbin/resources/?recipes/$recId");
+        $ingredientsData = getContentFromUrl("http://localhost/carbin/resources/?recipes/$recId/ingredients");
+        $tagsData = getContentFromUrl("http://localhost/carbin/resources/?recipes/$recId/tags");
         $numIng = count($ingredientsData);
+        $numTags = count($tagsData);
 
         $spotify = new Spotify($query, $type);
         $spotifyHref = $spotify->getHref();
@@ -45,11 +38,7 @@ if(isset($_GET['query'], $_GET['type']) && $_GET['query'] !="" && $_GET['type'] 
             <?php for($i = 0; $i < $numIng; $i++){ ?>
                 <li>
                     <?php if($ingredientsData[$i]->amount !== 0){ ?>
-<<<<<<< HEAD
-                        <span class="amount"><?php echo $ingredientsData[$i]->amount; ?>
-=======
                         <span class="amount"><?php echo $ingredientsData[$i]->amount; ?></span>
->>>>>>> dfc56bd1c538276d587ac749eeb9af98e22bb824
                     <?php } ?>
                     <span class="unit"><?php echo $ingredientsData[$i]->unit; ?></span>
                     <span class="ingredient"><?php echo $ingredientsData[$i]->ingredient; ?></span>
@@ -59,8 +48,22 @@ if(isset($_GET['query'], $_GET['type']) && $_GET['query'] !="" && $_GET['type'] 
     </div>
 <?php } ?>
     <div id="descriptions"><?php echo $recipeData[0]->description; ?></div>
-    <div id="Instructions"><?php echo $recipeData[0]->instructions; ?></div>
-    <div>
+    <div id="instructions"><?php echo $recipeData[0]->instructions; ?></div>
+    <div id="tagsContainer">
+
+        <?php if($numTags > 0){ ?>
+            <div id="currentTags">
+                <h3>Taggar</h3>
+                <dl>
+                    <?php for($i = 0; $i < $numTags; $i++){ ?>
+                        <dt><?php echo $tagsData[$i]->tag; ?></dt>
+                        <dt><?php echo $tagsData[$i]->percent; ?>%</dt>
+
+                    <?php } ?>
+                </dl>
+            </div>
+        <?php } ?>
+
         <h2>Tagga recept</h2>
         <form id="addTags" method="post" action="">
             <label for="tags">Taggar</label>

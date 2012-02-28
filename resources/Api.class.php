@@ -40,9 +40,6 @@ class Api {
 	    if(in_array($resource, array_keys($_RESOURCES))){
 	    	require_once($resource.'.resource.php');
 		    $obj = new $resource($method, $id, $data);
-		    // echo '<pre>';
-		    // print_r($obj->data);
-		    // echo '</pre>';
 		    echo json_encode($obj->data);
 	    } else {
 	    	echo 'The resource is not allowed!';

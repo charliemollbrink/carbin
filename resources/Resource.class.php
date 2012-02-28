@@ -64,7 +64,7 @@ abstract class Resource{
     if($fields_sql && $keys_sql){
       $query = "INSERT INTO {$this->entity} ($keys_sql)
       VALUES ($fields_sql)";  
- 
+
       $result = mysql_query($query);
       $id = mysql_insert_id();
       $this->get($id);

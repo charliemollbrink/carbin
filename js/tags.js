@@ -15,16 +15,23 @@ $(function(){
 		var form = $('#addTags');
 		form.submit(function(){
 			var query = input.val();
+			var recipeId = $('#recipeid').val();
 
 			if(typeof(tags[query]) !== "undefined"){
-				alert("exist");
+				var tagId = tags[query];
+				addToRecipeTags(recipeId, tagId);
 			} else {
 				$.post("http://localhost/carbin/resources/?alltags", {name: query}, function(data){
 					var tagId = data[0].id;
+					addToRecipeTags(recipeId, tagId);
 				},"json");
 			}
 			return false;
 		});
-
 	});
+	function addToRecipeTags(recipeId, tagId){
+		$.post("http://localhost/carbin/resources/?tags", {recipe_id: recipeId, tag_id: tagId}, function(data){
+			window.location.reload();
+		});
+	}
 });
