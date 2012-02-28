@@ -5,8 +5,10 @@ if(isset($_GET['query'], $_GET['type']) && $_GET['query'] !="" && $_GET['type'] 
     require_once('classes/lastFM.class.php');
     $query = $_GET['query'];
     $type = $_GET['type'];
+
     $search = new Search($query, $type);
     $recId = $search->getRecId();
+
 
     $lastfm = new LastFM($query);
     $lastfm->getTagList();
@@ -43,7 +45,11 @@ if(isset($_GET['query'], $_GET['type']) && $_GET['query'] !="" && $_GET['type'] 
             <?php for($i = 0; $i < $numIng; $i++){ ?>
                 <li>
                     <?php if($ingredientsData[$i]->amount !== 0){ ?>
+<<<<<<< HEAD
                         <span class="amount"><?php echo $ingredientsData[$i]->amount; ?>
+=======
+                        <span class="amount"><?php echo $ingredientsData[$i]->amount; ?></span>
+>>>>>>> dfc56bd1c538276d587ac749eeb9af98e22bb824
                     <?php } ?>
                     <span class="unit"><?php echo $ingredientsData[$i]->unit; ?></span>
                     <span class="ingredient"><?php echo $ingredientsData[$i]->ingredient; ?></span>

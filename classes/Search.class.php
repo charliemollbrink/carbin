@@ -16,22 +16,8 @@ class search{
 		$this->spotify_links = $Spotify->getHref();
 		*/
 		$LastFM = new LastFM($this->query);
-		$this->lastfm_tags = $LastFM->generateArrayTagList(5);
-		
-		/* Im to lazy to "hårdkoda" in arrays and the database havent been built but the structure is
-			basically the same as the tag list generated from lastfms api som im using that one and adding
-			the extra drink info needed. so basicaly ignore all the code from here...
-		$LastFM2 = new LastFM('cher');
-		$LastFM3 = new LastFM('beatles');
-		$LastFM4 = new LastFM('abba');
-		$recipe1 = $LastFM2->generateArrayTagList(5);
-		$recipe2 = $LastFM3->generateArrayTagList(5);
-		$recipe3 = $LastFM4->generateArrayTagList(5);
-		$recipes = array (array('id' =>'p2', 'tags' => $recipe1), array('id' =>'rum&coke', 'tags' => $recipe2), array('id' =>'cuba libra','tags' => $recipe3));
-		var_dump($recipes);
-		...to here */
-		
-		$this->drink_recipes = $this->fetchRecipies(); // this is where the result from the database should be
+		$this->lastfm_tags = $LastFM->generateArrayTagList(5);		
+		$this->drink_recipes = $this->fetchRecipies();
 		$this->analyseBestFit();
 
 	}

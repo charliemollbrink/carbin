@@ -34,10 +34,14 @@ abstract class Resource{
       FROM {$this->entity}
       WHERE {$this->id}='$id'
     ";
-
+    $resource = false;
     $result = mysql_query($query);
-    while($row = mysql_fetch_assoc($result)){
-      $resource[] = $row;
+    if($result){
+      while($row = mysql_fetch_assoc($result)){
+        $resource[] = $row;
+      }
+    } else {
+      $resource = false;
     }
     $this->data = $resource;
   }
