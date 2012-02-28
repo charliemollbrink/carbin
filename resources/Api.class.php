@@ -12,23 +12,15 @@
 		        $parts[] = $part;
 		      }
 		    }
-		     
-		    $resource   = $parts[0];
-		    $id = '';
-		    $idLev2 = '';
-		    $resourceLev2 = '';
 
-		    if(isset($parts[1])){
-		      $id   = $parts[1];
+		    $numParts = count($parts);
+		    if($numParts % 2){
+		    	$resource = array_pop($parts);
+		    	$id = array_pop($parts);
+		    } else {
+		    	$id = array_pop($parts);
+		    	$resource = array_pop($parts);
 		    }
-		    if(isset($parts[2])){
-		    	$resource = $parts[2];
-		    	$resourceLev2 = $parts[2];
-		    }
-		    if(isset($parts[3])){
-		    	$idLev2 = $parts[3];
-		    }
-		    
 		    $method   = $_SERVER['REQUEST_METHOD'];
 		     
 		    switch ($method){
@@ -46,7 +38,7 @@
 	        }  
 		     
 		    require_once($resource.'.resource.php');
-		    $obj = new $resource($method, $id, $idLev2, $data, $resourceLev2);
+		    $obj = new $resource($method, $id, $data);
 		    echo json_encode($obj->data);
 		}
 	}
