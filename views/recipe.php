@@ -44,7 +44,7 @@ if(isset($_GET['query'], $_GET['type']) && $_GET['query'] !="" && $_GET['type'] 
             <?php for($i = 0; $i < $numIng; $i++){ ?>
                 <li>
                     <?php if($ingredientsData[$i]->amount !== 0){ ?>
-                        <span class="amount"><?php echo $ingredientsData[$i]->amount; ?>
+                        <span class="amount"><?php echo $ingredientsData[$i]->amount; ?></span>
                     <?php } ?>
                     <span class="unit"><?php echo $ingredientsData[$i]->unit; ?></span>
                     <span class="ingredient"><?php echo $ingredientsData[$i]->ingredient; ?></span>
