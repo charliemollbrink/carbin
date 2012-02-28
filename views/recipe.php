@@ -2,10 +2,20 @@
 if(isset($_GET['query'], $_GET['type']) && $_GET['query'] !="" && $_GET['type'] !=""){
     require_once('classes/Search.class.php');
     require_once('classes/Spotify.class.php');
+    require_once('classes/lastFM.class.php');
     $query = $_GET['query'];
     $type = $_GET['type'];
-    $search = new Search($query, $type);
-    $recId = $search->recId();
+    // $search = new Search($query, $type);
+    // $recId = $search->recId();
+    $recId = 1;
+
+    $lastfm = new LastFM($query);
+    $lastfm->getTagList();
+
+    // echo '<pre>';
+    // print_r($lastfm);
+    // echo '</pre>';
+
 
     if($recId){
         $recipeUrl = "http://localhost/carbin/resources/?recipes/$recId";
@@ -25,7 +35,6 @@ if(isset($_GET['query'], $_GET['type']) && $_GET['query'] !="" && $_GET['type'] 
 ?>
 <div id="recipe">
     <a href ="<?php echo $spotifyHref; ?>"><?php echo $spotifyName; ?></a>
-    
     <h1><?php echo $recipeData[0]->title; ?></h1>
 
 <?php if($numIng > 0){ ?>
@@ -33,11 +42,25 @@ if(isset($_GET['query'], $_GET['type']) && $_GET['query'] !="" && $_GET['type'] 
         <h2>Ingredienser</h2>
         <ul>
             <?php for($i = 0; $i < $numIng; $i++){ ?>
-                <li><?php echo $ingredientsData[$i]->ingredient; ?></li>
+                <li>
+                    <?php if($ingredientsData[$i]->amount !== 0){ ?>
+                        <span class="amount"><?php echo $ingredientsData[$i]->amount; ?>
+                    <?php } ?>
+                    <span class="unit"><?php echo $ingredientsData[$i]->unit; ?></span>
+                    <span class="ingredient"><?php echo $ingredientsData[$i]->ingredient; ?></span>
+                </li>
             <?php } ?>
         </ul>
     </div>
 <?php } ?>
     <div id="descriptions"><?php echo $recipeData[0]->description; ?></div>
     <div id="Instructions"><?php echo $recipeData[0]->instructions; ?></div>
+    <div>
+        <h2>Tagga recept</h2>
+        <form id="addTags" method="post" action="">
+            <label for="tags">Taggar</label>
+            <input type="text" name="tags" id="tags" />
+            <button type="submit">Lägg till</button>
+        </form>
+    </div>
 </div>
