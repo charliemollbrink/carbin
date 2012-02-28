@@ -1,17 +1,30 @@
 $(function(){
-	// $.getJSON("http://localhost/carbin/resources/?alltags", function(data){
-	// 	$.each(data, function(index, value){
-	// 		console.debug(value.name);
-	// 	});
-	// });
-	var avalableTags = [
-		"test1",
-		"test2",
-		"test3",
-		"test4",
-		"test5",
-		"test6",
-		"test7"
-	];
-	// alert("test");
+	$.getJSON("http://localhost/carbin/resources/?alltags", function(data){
+		
+		var tags = {};
+		var tagsArray = []; 
+		$.each(data, function(index, value){
+			tags[value.name] = value.id;
+			tagsArray.push(value.name);
+		});
+
+		var input = $('#tags');
+		input.autocomplete({
+			source: tagsArray
+		});
+		var form = $('#addTags');
+		form.submit(function(){
+			var query = input.val();
+
+			if(typeof(tags[query]) !== "undefined"){
+				alert("exist");
+			} else {
+				$.post("http://localhost/carbin/resources/?alltags", {name: query}, function(data){
+					var tagId = data[0].id;
+				},"json");
+			}
+			return false;
+		});
+
+	});
 });

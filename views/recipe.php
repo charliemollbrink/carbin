@@ -60,6 +60,7 @@ if(isset($_GET['query'], $_GET['type']) && $_GET['query'] !="" && $_GET['type'] 
         <form id="addTags" method="post" action="">
             <label for="tags">Taggar</label>
             <input type="text" name="tags" id="tags" />
+            <input type="hidden" name="recipeid" id="recipeid" value="<?php echo $recipeData[0]->id; ?>"/>
             <button type="submit">Lägg till</button>
         </form>
     </div>
