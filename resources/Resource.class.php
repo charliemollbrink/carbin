@@ -107,6 +107,7 @@ abstract class Resource{
       SELECT {$this->fields['get']}
       FROM {$this->entity}
     ";
+    echo $query;
 
     $result = mysql_query($query);
     while($row = mysql_fetch_assoc($result)){
