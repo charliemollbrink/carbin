@@ -17,15 +17,24 @@ $(function(){
 			var query = input.val();
 			var recipeId = $('#recipeid').val();
 
-			if(typeof(tags[query]) !== "undefined"){
-				var tagId = tags[query];
-				addToRecipeTags(recipeId, tagId);
-			} else {
-				$.post("http://localhost/carbin/resources/?alltags", {name: query}, function(data){
-					var tagId = data[0].id;
+			if(query !=="" && recipeId !=""){
+				if(typeof(tags[query]) !== "undefined"){
+					var tagId = tags[query];
 					addToRecipeTags(recipeId, tagId);
-				},"json");
+				} else {
+					$.post("http://localhost/carbin/resources/?alltags", {name: query}, function(data){
+						var tagId = data[0].id;
+						addToRecipeTags(recipeId, tagId);
+					},"json");
+				}
+			} else {
+				input.addClass('error');
 			}
+			input.focus(function(){
+				if(input.hasClass('error')){
+					input.removeClass('error');
+				}
+			});
 			return false;
 		});
 	});
