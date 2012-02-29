@@ -23,7 +23,7 @@ class LastFM{
 		$tag_list = '';
 		$tags = new SimpleXMLElement($this->result);
 		for ($i= 0; $i < $limit; ++$i){
-			$tag = (string)$tags->toptags[0]->tag[$i]->name;
+			$tag = strtolower($tags->toptags[0]->tag[$i]->name);
 			$tag_list .= $tag.", ";
 		}
 	return $tag_list;
@@ -32,8 +32,8 @@ class LastFM{
 	public function generateArrayTagList($limit){
 		$tags = new SimpleXMLElement($this->result);
 		for ($i= 0; $i < $limit; ++$i){
-			$name = (string)$tags->toptags[0]->tag[$i]->name;
-			$count = (string)$tags->toptags[0]->tag[$i]->count;
+			$name = strtolower($tags->toptags[0]->tag[$i]->name);
+			$count = (int)$tags->toptags[0]->tag[$i]->count;
 			$tag_list[$name] = $count;
 			//$tag_list[] = array('name' => $name, 'count' => $count);
 		}
