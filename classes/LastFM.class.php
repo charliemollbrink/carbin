@@ -22,7 +22,7 @@ class LastFM{
 	public function generateCommaTagList($limit){
 		$tag_list = '';
 		$tags = new SimpleXMLElement($this->result);
-		for ($i= 1; $i <= $limit; ++$i){
+		for ($i= 0; $i < $limit; ++$i){
 			$tag = (string)$tags->toptags[0]->tag[$i]->name;
 			$tag_list .= $tag.", ";
 		}
@@ -31,7 +31,7 @@ class LastFM{
 	/* function to generate an array with tags an percentage */
 	public function generateArrayTagList($limit){
 		$tags = new SimpleXMLElement($this->result);
-		for ($i= 1; $i <= $limit; ++$i){
+		for ($i= 0; $i < $limit; ++$i){
 			$name = (string)$tags->toptags[0]->tag[$i]->name;
 			$count = (string)$tags->toptags[0]->tag[$i]->count;
 			$tag_list[$name] = $count;
