@@ -1,5 +1,5 @@
 $(function(){
-	$.getJSON("http://localhost/carbin/resources/?alltags", function(data){
+	$.getJSON("./resources/?alltags", function(data){
 		
 		var tags = {};
 		var tagsArray = []; 
@@ -22,7 +22,7 @@ $(function(){
 					var tagId = tags[query];
 					addToRecipeTags(recipeId, tagId);
 				} else {
-					$.post("http://localhost/carbin/resources/?alltags", {name: query}, function(data){
+					$.post("./resources/?alltags", {name: query}, function(data){
 						var tagId = data[0].id;
 						addToRecipeTags(recipeId, tagId);
 					},"json");
@@ -39,7 +39,7 @@ $(function(){
 		});
 	});
 	function addToRecipeTags(recipeId, tagId){
-		$.post("http://localhost/carbin/resources/?tags", {recipe_id: recipeId, tag_id: tagId}, function(data){
+		$.post("./resources/?tags", {recipe_id: recipeId, tag_id: tagId}, function(data){
 			window.location.reload();
 		});
 	}

@@ -15,6 +15,9 @@ if(isset($_GET['query'], $_GET['type']) && $_GET['query'] !="" && $_GET['type'] 
     }
 
     if($recId){
+        // echo "<pre>";
+        // print_r($_SERVER);
+        // echo "</pre>";
         $recipeData = getContentFromUrl("http://localhost/carbin/resources/?recipes/$recId");
         $ingredientsData = getContentFromUrl("http://localhost/carbin/resources/?recipes/$recId/ingredients");
         $tagsData = getContentFromUrl("http://localhost/carbin/resources/?recipes/$recId/tags");
